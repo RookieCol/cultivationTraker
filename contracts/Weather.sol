@@ -22,10 +22,10 @@ contract CultivationToken is ERC1155 {
         _name = "IotCultivationTracker";
     }
 
-    function mint(address to, string memory tokenURI, string memory strain, uint256 plantationDate, uint256 harvestDate) external {
+    function mint(address to, string memory tokenURI, string memory strain, uint256 plantationDate) external {
         _mint(to, tokenCounter, 1, "");
         _setTokenURI(tokenCounter, tokenURI);
-        _cultivationData[tokenCounter] = Cultivation(strain, plantationDate, harvestDate);
+        _cultivationData[tokenCounter] = Cultivation(strain, plantationDate, 0); // Set harvestDate to 0 initially
         tokenCounter++;
     }
 
@@ -55,6 +55,12 @@ contract CultivationToken is ERC1155 {
     function getCultivationData(uint256 tokenId) external view returns (Cultivation memory) {
         require(_exists(tokenId), "Token does not exist");
         return _cultivationData[tokenId];
+    }
+
+    function setHarvestDate(uint256 tokenId, uint256 harvestDate) external {
+        require(_exists(tokenId), "Token does not exist");
+        require(balanceOf(msg.sender, tokenId) > 0, "Caller is not the token owner");
+        _cultivationData[tokenId].harvestDate = harvestDate;
     }
 
     function name() public view returns (string memory) {
