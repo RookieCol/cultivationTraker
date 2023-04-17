@@ -63,7 +63,4 @@ contract CultivationToken is ERC1155 {
         _cultivationData[tokenId].harvestDate = harvestDate;
     }
 
-    function name() public view returns (string memory) {
-        return _name;
-    }
 }
